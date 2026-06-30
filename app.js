@@ -1,81 +1,90 @@
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
 
-const supabase = window.supabase.createClient(
+const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-console.log("Supabase Loaded", supabase);
-
 
 let items = [];
 
 const container = document.getElementById("menu-items");
 const searchBox = document.getElementById("searchBox");
 
-// گرفتن دیتا از Supabase
 async function loadItems() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("menu")
+      .select("*");
 
-  const { data, error } = await supabase
-    .from("menu")
-    .select("*");
+    if (error) {
+      console.error("Supabase Error:", error);
+      container.innerHTML =
+        "<p style='text-align:center'>خطا در دریافت اطلاعات</p>";
+      return;
+    }
 
-  if (error) {
-    console.log("Supabase Error:", error);
-    return;
+    items = data || [];
+    renderMenu();
+  } catch (err) {
+    console.error(err);
+    container.innerHTML =
+      "<p style='text-align:center'>خطا در اتصال</p>";
   }
-
-  items = data;
-  renderMenu();
 }
 
-// نمایش منو
 function renderMenu(filter = "", category = "") {
-
   container.innerHTML = "";
 
-  let filtered = items;
+  let filtered = [...items];
 
   if (filter) {
-    filtered = filtered.filter(i =>
-      i.name.includes(filter)
+    filtered = filtered.filter(item =>
+      (item.name || "")
+        .toLowerCase()
+        .includes(filter.toLowerCase())
     );
   }
 
   if (category) {
-    filtered = filtered.filter(i =>
-      i.category === category
+    filtered = filtered.filter(
+      item => item.category === category
     );
   }
 
   if (filtered.length === 0) {
-    container.innerHTML = "<p style='text-align:center'>موردی پیدا نشد</p>";
+    container.innerHTML =
+      "<p style='text-align:center'>موردی پیدا نشد</p>";
     return;
   }
 
   filtered.forEach(item => {
+    const image =
+      item.image && item.image.trim() !== ""
+        ? item.image
+        : "https://picsum.photos/300/200";
+
     container.innerHTML += `
       <div class="food-card">
-        <img src="${item.image || 'https://via.placeholder.com/300x200'}">
-        <h3>${item.name}</h3>
-        <p>${item.price} تومان</p>
-        <small>${item.category}</small>
+        <img src="${image}" alt="${item.name}">
+        <h3>${item.name || ""}</h3>
+        <p>${item.price || 0} تومان</p>
+        <small>${item.category || ""}</small>
       </div>
     `;
   });
 }
 
-// سرچ
-searchBox.addEventListener("input", (e) => {
-  renderMenu(e.target.value);
-});
+if (searchBox) {
+  searchBox.addEventListener("input", e => {
+    renderMenu(e.target.value);
+  });
+}
 
-// دسته‌بندی‌ها
 document.querySelectorAll(".category").forEach(cat => {
   cat.addEventListener("click", () => {
     renderMenu("", cat.innerText);
   });
 });
 
-// شروع
 loadItems();
