@@ -1,3 +1,5 @@
+console.log("ADMIN JS LOADED");
+
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
 
@@ -8,13 +10,11 @@ const supabase = window.supabase.createClient(
 
 let items = [];
 let selectedImage = "";
-let selectedLogo = "";
 
 const PASSWORD = "ghofl21733";
 
 // ورود
 function login() {
-
   const pass = document.getElementById("password").value;
 
   if (pass !== PASSWORD) {
@@ -28,7 +28,7 @@ function login() {
   loadItems();
 }
 
-// دریافت غذاها
+// گرفتن آیتم‌ها
 async function loadItems() {
 
   const { data, error } = await supabase
@@ -43,17 +43,15 @@ async function loadItems() {
 
   items = data || [];
 
-  document.getElementById("foodCount").innerText =
-    items.length;
+  document.getElementById("foodCount").innerText = items.length;
 
   renderItems();
 }
 
-// نمایش غذاها
+// نمایش
 function renderItems() {
 
   const list = document.getElementById("list");
-
   list.innerHTML = "";
 
   items.forEach(item => {
@@ -61,55 +59,41 @@ function renderItems() {
     list.innerHTML += `
       <div class="card">
 
-        ${item.image ?
-        `<img src="${item.image}">`
-        : ""}
+        ${item.image ? `<img src="${item.image}">` : ""}
 
         <h4>${item.name}</h4>
-
-        <p>💰 ${item.price} تومان</p>
-
+        <p>💰 ${item.price}</p>
         <p>📂 ${item.category}</p>
 
-        <button
-          class="delete-btn"
-          onclick="deleteItem(${item.id})">
-          🗑 حذف
+        <button class="delete-btn" onclick="deleteItem(${item.id})">
+          حذف
         </button>
 
       </div>
     `;
   });
-
 }
 
-// افزودن غذا
+// افزودن
 async function addItem() {
 
-  const name =
-    document.getElementById("name").value.trim();
-
-  const price =
-    document.getElementById("price").value.trim();
-
-  const category =
-    document.getElementById("category").value;
+  const name = document.getElementById("name").value.trim();
+  const price = document.getElementById("price").value.trim();
+  const category = document.getElementById("category").value;
 
   if (!name || !price) {
-    alert("نام و قیمت را وارد کنید");
+    alert("نام و قیمت لازم است");
     return;
   }
 
   const { error } = await supabase
     .from("menu")
-    .insert([
-      {
-        name,
-        price,
-        image: selectedImage,
-        category
-      }
-    ]);
+    .insert([{
+      name,
+      price,
+      image: selectedImage,
+      category
+    }]);
 
   if (error) {
     console.log(error);
@@ -117,7 +101,7 @@ async function addItem() {
     return;
   }
 
-  alert("غذا اضافه شد");
+  alert("اضافه شد");
 
   document.getElementById("name").value = "";
   document.getElementById("price").value = "";
@@ -128,7 +112,7 @@ async function addItem() {
   loadItems();
 }
 
-// حذف غذا
+// حذف
 async function deleteItem(id) {
 
   if (!confirm("حذف شود؟")) return;
@@ -147,68 +131,17 @@ async function deleteItem(id) {
   loadItems();
 }
 
-// ذخیره تنظیمات کافه
-function saveSettings() {
-
-  const settings = {
-
-    name:
-      document.getElementById("cafeName").value,
-
-    phone:
-      document.getElementById("cafePhone").value,
-
-    instagram:
-      document.getElementById("cafeInstagram").value,
-
-    address:
-      document.getElementById("cafeAddress").value,
-
-    logo:
-      selectedLogo
-
-  };
-
-  localStorage.setItem(
-    "cafeSettings",
-    JSON.stringify(settings)
-  );
-
-  alert("تنظیمات ذخیره شد");
-}
-
-// عکس غذا
-document
-.getElementById("image")
+// عکس
+document.getElementById("image")
 .addEventListener("change", function () {
 
   const file = this.files[0];
-
   if (!file) return;
 
   const reader = new FileReader();
 
   reader.onload = function (e) {
     selectedImage = e.target.result;
-  };
-
-  reader.readAsDataURL(file);
-
-});
-
-// لوگو
-document
-.getElementById("logoFile")
-.addEventListener("change", function () {
-
-  const file = this.files[0];
-
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function (e) {
-    selectedLogo = e.target.result;
   };
 
   reader.readAsDataURL(file);
