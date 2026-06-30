@@ -31,27 +31,12 @@ border:1px solid #333;
 
 #panel{display:none;}
 
-.topbar{text-align:center;margin-bottom:25px;}
-.topbar h1{color:#d4af37;font-size:34px;}
-.topbar p{color:#999;margin-top:5px;}
-
-.stats{
-display:flex;
-justify-content:center;
+.topbar{
+text-align:center;
 margin-bottom:25px;
 }
 
-.stat-card{
-background:#1c1c1c;
-padding:20px;
-border-radius:20px;
-width:220px;
-text-align:center;
-border:1px solid #333;
-}
-
-.stat-card h2{
-font-size:42px;
+.topbar h1{
 color:#d4af37;
 }
 
@@ -83,8 +68,6 @@ font-weight:bold;
 cursor:pointer;
 }
 
-button:hover{transform:translateY(-2px);}
-
 .card{
 background:#252525;
 padding:15px;
@@ -103,7 +86,6 @@ border-radius:10px;
 .delete-btn{
 background:#d9534f;
 color:white;
-margin-top:10px;
 }
 </style>
 </head>
@@ -111,8 +93,8 @@ margin-top:10px;
 <body>
 
 <div id="loginBox">
-<h2 style="text-align:center;margin-bottom:20px;">🔐 ورود</h2>
-<input type="password" id="password" placeholder="رمز عبور">
+<h2 style="text-align:center">🔐 ورود</h2>
+<input type="password" id="password" placeholder="رمز">
 <button onclick="login()">ورود</button>
 </div>
 
@@ -120,23 +102,14 @@ margin-top:10px;
 
 <div class="topbar">
 <h1>☕ کافه گالری ایران</h1>
-<p>مدیریت منو</p>
-</div>
-
-<div class="stats">
-<div class="stat-card">
-<h2 id="foodCount">0</h2>
-<div>تعداد آیتم‌ها</div>
-</div>
 </div>
 
 <div class="section">
 <h3>افزودن غذا</h3>
 
-<input id="name" placeholder="نام غذا">
+<input id="name" placeholder="نام">
 <input id="price" placeholder="قیمت">
-
-<input type="file" id="image" accept="image/*">
+<input type="file" id="image">
 
 <select id="category">
 <option>پیتزا</option>
@@ -149,11 +122,11 @@ margin-top:10px;
 <option>بار گرم و سرد</option>
 </select>
 
-<button onclick="addItem()">➕ افزودن</button>
+<button onclick="addItem()">افزودن</button>
 </div>
 
 <div class="section">
-<h3>لیست غذاها</h3>
+<h3>لیست</h3>
 <div id="list"></div>
 </div>
 

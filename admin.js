@@ -3,7 +3,7 @@ console.log("ADMIN JS LOADED");
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
 
-const supabase = window.supabase.createClient(
+const supabase = window.supabase?.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
@@ -13,12 +13,13 @@ let selectedImage = "";
 
 const PASSWORD = "ghofl21733";
 
-// ورود
+// LOGIN
 function login() {
+
   const pass = document.getElementById("password").value;
 
   if (pass !== PASSWORD) {
-    alert("رمز اشتباه است");
+    alert("رمز اشتباه");
     return;
   }
 
@@ -28,7 +29,7 @@ function login() {
   loadItems();
 }
 
-// گرفتن آیتم‌ها
+// LOAD ITEMS
 async function loadItems() {
 
   const { data, error } = await supabase
@@ -43,13 +44,11 @@ async function loadItems() {
 
   items = data || [];
 
-  document.getElementById("foodCount").innerText = items.length;
-
-  renderItems();
+  render();
 }
 
-// نمایش
-function renderItems() {
+// RENDER
+function render() {
 
   const list = document.getElementById("list");
   list.innerHTML = "";
@@ -61,9 +60,9 @@ function renderItems() {
 
         ${item.image ? `<img src="${item.image}">` : ""}
 
-        <h4>${item.name}</h4>
-        <p>💰 ${item.price}</p>
-        <p>📂 ${item.category}</p>
+        <h3>${item.name}</h3>
+        <p>${item.price}</p>
+        <p>${item.category}</p>
 
         <button class="delete-btn" onclick="deleteItem(${item.id})">
           حذف
@@ -74,7 +73,7 @@ function renderItems() {
   });
 }
 
-// افزودن
+// ADD ITEM
 async function addItem() {
 
   const name = document.getElementById("name").value.trim();
@@ -97,7 +96,7 @@ async function addItem() {
 
   if (error) {
     console.log(error);
-    alert("خطا در ذخیره");
+    alert("خطا");
     return;
   }
 
@@ -112,26 +111,18 @@ async function addItem() {
   loadItems();
 }
 
-// حذف
+// DELETE
 async function deleteItem(id) {
 
-  if (!confirm("حذف شود؟")) return;
-
-  const { error } = await supabase
+  await supabase
     .from("menu")
     .delete()
     .eq("id", id);
 
-  if (error) {
-    console.log(error);
-    alert("خطا در حذف");
-    return;
-  }
-
   loadItems();
 }
 
-// عکس
+// IMAGE
 document.getElementById("image")
 .addEventListener("change", function () {
 
@@ -140,10 +131,14 @@ document.getElementById("image")
 
   const reader = new FileReader();
 
-  reader.onload = function (e) {
+  reader.onload = e => {
     selectedImage = e.target.result;
   };
 
   reader.readAsDataURL(file);
-
 });
+
+// expose functions
+window.login = login;
+window.addItem = addItem;
+window.deleteItem = deleteItem;
