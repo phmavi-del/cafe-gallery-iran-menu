@@ -1,0 +1,63 @@
+#menu-items{
+padding:15px;
+display:grid;
+gap:20px;
+}
+
+.food-card{
+background:#222;
+border-radius:15px;
+overflow:hidden;
+border:1px solid #333;
+}
+
+.food-card img{
+width:100%;
+height:200px;
+object-fit:contain;
+background:#111;
+display:block;
+}
+
+.food-card h3{
+padding:10px;
+color:#d4af37;
+}
+
+.food-card p{
+padding:0 10px 15px;
+font-size:18px;
+}
+
+.categories{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+padding:15px;
+}
+
+.category{
+background:#222;
+color:white;
+padding:10px 15px;
+border-radius:25px;
+cursor:pointer;
+border:1px solid #444;
+font-size:14px;
+transition:0.3s;
+}
+
+.category:hover{
+background:#d4af37;
+color:black;
+}
+
+.category:active{
+transform:scale(0.95);
+}
+
+.category.active{
+background:#d4af37;
+color:black;
+}

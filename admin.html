@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل مدیریت - کافه گالری ایران</title><link rel="stylesheet" href="style.css"><style>
+body{
+background:#111;
+color:white;
+padding:20px;
+font-family:tahoma;
+}
+
+input,select,button{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:10px;
+border:none;
+box-sizing:border-box;
+}
+
+button{
+background:#d4af37;
+color:black;
+font-weight:bold;
+cursor:pointer;
+}
+
+.card{
+background:#222;
+padding:10px;
+margin:10px 0;
+border-radius:10px;
+}
+
+hr{
+margin:20px 0;
+border:1px solid #333;
+}
+
+h2,h3{
+text-align:center;
+}
+</style></head>
+<body><h2>🔐 ورود به پنل مدیریت</h2><div id="loginBox">
+<input type="password" id="password" placeholder="رمز عبور">
+<button onclick="login()">ورود</button>
+</div><div id="panel" style="display:none"><h2>کافه گالری ایران</h2><hr><h3>⚙️ تنظیمات کافه</h3><input id="cafeName" placeholder="نام کافه"><input id="cafePhone" placeholder="شماره تماس"><input id="cafeInstagram" placeholder="اینستاگرام"><input id="cafeAddress" placeholder="آدرس"><label>لوگوی کافه</label>
+<input type="file" id="logoFile" accept="image/*">
+
+<button onclick="saveSettings()">
+ذخیره تنظیمات
+</button><hr><h3>🍔 افزودن غذا</h3><input id="name" placeholder="نام غذا"><input id="price" placeholder="قیمت"><input type="file" id="image" accept="image/*"><select id="category">
+<option>پیتزا</option>
+<option>برگر</option>
+<option>ساندویچ</option>
+<option>سالاد</option>
+<option>پاستا</option>
+<option>پیش غذا</option>
+<option>دسر</option>
+<option>بار گرم و سرد</option>
+</select><button onclick="addItem()">
+➕ افزودن غذا
+</button><hr><h3>📋 لیست غذاها</h3><div id="list"></div></div><script src="admin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</body>
+</html>
