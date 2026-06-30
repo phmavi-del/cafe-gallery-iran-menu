@@ -1,144 +1,100 @@
 console.log("ADMIN JS LOADED");
 
-const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
-const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
-
-const supabase = window.supabase?.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+// 🔥 Supabase
+const supabase = window.supabase.createClient(
+  "https://fgqnzspfrkqdczsyoose.supabase.co",
+  "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1"
 );
 
-let items = [];
-let selectedImage = "";
+// 🔐 رمز
+const PASSWORD = "1234";
 
-const PASSWORD = "ghofl21733";
+let imageBase64 = "";
 
-// LOGIN
+// ===== LOGIN =====
 function login() {
-
-  const pass = document.getElementById("password").value;
+  const pass = document.getElementById("pass").value;
 
   if (pass !== PASSWORD) {
-    alert("رمز اشتباه");
+    alert("رمز اشتباه است");
     return;
   }
 
   document.getElementById("loginBox").style.display = "none";
-  document.getElementById("panel").style.display = "block";
+  document.getElementById("panel").classList.remove("hidden");
 
   loadItems();
 }
 
-// LOAD ITEMS
+// ===== LOAD =====
 async function loadItems() {
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("menu")
     .select("*")
     .order("id", { ascending: false });
 
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  items = data || [];
-
-  render();
+  render(data || []);
 }
 
-// RENDER
-function render() {
+// ===== RENDER =====
+function render(items) {
 
   const list = document.getElementById("list");
   list.innerHTML = "";
 
-  items.forEach(item => {
+  items.forEach(i => {
 
     list.innerHTML += `
       <div class="card">
-
-        ${item.image ? `<img src="${item.image}">` : ""}
-
-        <h3>${item.name}</h3>
-        <p>${item.price}</p>
-        <p>${item.category}</p>
-
-        <button class="delete-btn" onclick="deleteItem(${item.id})">
-          حذف
-        </button>
-
+        ${i.image ? `<img src="${i.image}">` : ""}
+        <h3>${i.name}</h3>
+        <p>${i.price}</p>
+        <p>${i.category}</p>
+        <button onclick="del(${i.id})">حذف</button>
       </div>
     `;
   });
 }
 
-// ADD ITEM
+// ===== ADD =====
 async function addItem() {
 
-  const name = document.getElementById("name").value.trim();
-  const price = document.getElementById("price").value.trim();
-  const category = document.getElementById("category").value;
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+  const cat = document.getElementById("cat").value;
 
   if (!name || !price) {
     alert("نام و قیمت لازم است");
     return;
   }
 
-  const { error } = await supabase
-    .from("menu")
-    .insert([{
-      name,
-      price,
-      image: selectedImage,
-      category
-    }]);
-
-  if (error) {
-    console.log(error);
-    alert("خطا");
-    return;
-  }
-
-  alert("اضافه شد");
-
-  document.getElementById("name").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("image").value = "";
-
-  selectedImage = "";
+  await supabase.from("menu").insert([{
+    name,
+    price,
+    category: cat,
+    image: imageBase64
+  }]);
 
   loadItems();
 }
 
-// DELETE
-async function deleteItem(id) {
-
-  await supabase
-    .from("menu")
-    .delete()
-    .eq("id", id);
-
+// ===== DELETE =====
+async function del(id) {
+  await supabase.from("menu").delete().eq("id", id);
   loadItems();
 }
 
-// IMAGE
-document.getElementById("image")
-.addEventListener("change", function () {
-
-  const file = this.files[0];
-  if (!file) return;
-
+// ===== IMAGE =====
+document.getElementById("img").addEventListener("change", e => {
+  const file = e.target.files[0];
   const reader = new FileReader();
 
-  reader.onload = e => {
-    selectedImage = e.target.result;
-  };
-
+  reader.onload = () => imageBase64 = reader.result;
   reader.readAsDataURL(file);
 });
 
-// expose functions
+// expose
 window.login = login;
 window.addItem = addItem;
-window.deleteItem = deleteItem;
+window.del = del;
