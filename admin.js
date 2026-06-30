@@ -1,40 +1,25 @@
-const PASSWORD = "4321";
+const PASSWORD = "1234";
 
-const supabase = window.supabase.createClient(
-  "https://fgqnzspfrkqdczsyoose.supabase.co",
-  "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1"
-);
-
+let foods = [];
 let imgBase64 = "";
 
-// عناصر
-const loginBox = document.getElementById("loginBox");
-const panel = document.getElementById("panel");
-
-const pass = document.getElementById("pass");
-
-const name = document.getElementById("name");
-const price = document.getElementById("price");
-const cat = document.getElementById("cat");
-
-const list = document.getElementById("list");
-
 // 🔐 لاگین
-document.getElementById("loginBtn").addEventListener("click", () => {
+function login() {
 
-  if (pass.value !== PASSWORD) {
+  const pass = document.getElementById("pass").value;
+
+  if (pass !== PASSWORD) {
     alert("رمز اشتباه است");
     return;
   }
 
-  loginBox.classList.add("hidden");
-  panel.classList.remove("hidden");
-
-  loadMenu();
-});
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("panel").style.display = "block";
+}
 
 // 📷 عکس
 document.getElementById("img").addEventListener("change", e => {
+
   const file = e.target.files[0];
   const reader = new FileReader();
 
@@ -46,56 +31,47 @@ document.getElementById("img").addEventListener("change", e => {
 });
 
 // ➕ افزودن غذا
-document.getElementById("addBtn").addEventListener("click", async () => {
+function addFood() {
 
-  if (!name.value || !price.value) {
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+
+  if (!name || !price) {
     alert("نام و قیمت لازم است");
     return;
   }
 
-  await supabase.from("menu").insert([{
-    name: name.value,
-    price: Number(price.value),
-    category: cat.value,
+  foods.push({
+    name,
+    price,
     image: imgBase64
-  }]);
+  });
 
-  name.value = "";
-  price.value = "";
+  render();
 
-  loadMenu();
-});
-
-// 📦 لود منو
-async function loadMenu() {
-
-  const { data } = await supabase
-    .from("menu")
-    .select("*")
-    .order("id", { ascending: false });
-
-  render(data || []);
+  document.getElementById("name").value = "";
+  document.getElementById("price").value = "";
 }
 
 // 🎨 نمایش
-function render(items) {
+function render() {
 
+  const list = document.getElementById("list");
   list.innerHTML = "";
 
-  items.forEach(i => {
+  foods.forEach(f => {
 
     list.innerHTML += `
       <div class="card">
-        ${i.image ? `<img src="${i.image}">` : ""}
-        <h3>${i.name}</h3>
-        <p>${i.price} تومان</p>
-        <p>${i.category}</p>
+        ${f.image ? `<img src="${f.image}">` : ""}
+        <h3>${f.name}</h3>
+        <p>${f.price} تومان</p>
       </div>
     `;
   });
 }
 
-// 🧾 QR
+// 📱 QR
 function makeQR() {
 
   const url = window.location.origin + "/menu.html";
