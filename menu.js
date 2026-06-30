@@ -7,8 +7,7 @@ async function loadMenu() {
 
   const { data } = await supabase
     .from("menu")
-    .select("*")
-    .order("id", { ascending: false });
+    .select("*");
 
   const box = document.getElementById("menu");
   box.innerHTML = "";

@@ -2,32 +2,59 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>پنل مدیریت</title>
+<title>پنل مدیریت کافه</title>
 
 <style>
 body{background:#111;color:#fff;font-family:tahoma;padding:20px}
-.box{max-width:400px;margin:80px auto;background:#1c1c1c;padding:20px;border-radius:15px}
-input,button{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:none}
-input{background:#2a2a2a;color:#fff}
-button{background:#d4af37;font-weight:bold;cursor:pointer}
-.hidden{display:none}
+.box{max-width:500px;margin:30px auto;background:#1c1c1c;padding:20px;border-radius:15px}
+input,select,button{width:100%;padding:10px;margin:8px 0;border-radius:10px;border:none}
+input,select{background:#2a2a2a;color:#fff}
+button{background:#d4af37;font-weight:bold}
+.card{background:#222;padding:10px;margin:10px 0;border-radius:10px}
+img{width:100%;border-radius:10px}
+#qrBox{margin-top:15px;text-align:center}
 </style>
 </head>
 
 <body>
 
-<div class="box" id="loginBox">
-<h2>ورود مدیریت</h2>
-<input type="password" id="pass">
-<button id="loginBtn">ورود</button>
+<div class="box">
+
+<h2>🍔 پنل مدیریت</h2>
+
+<input id="name" placeholder="نام غذا">
+<input id="price" placeholder="قیمت">
+
+<input type="file" id="img">
+
+<select id="cat">
+<option>پیتزا</option>
+<option>برگر</option>
+<option>ساندویچ</option>
+<option>سالاد</option>
+<option>پاستا</option>
+<option>دسر</option>
+<option>بار گرم و سرد</option>
+</select>
+
+<button id="addBtn">افزودن</button>
+
+<hr>
+
+<h3>🔗 QR منو</h3>
+<button onclick="generateQR()">ساخت QR منو</button>
+
+<div id="qrBox"></div>
+
+<hr>
+
+<h3>لیست غذاها</h3>
+<div id="list"></div>
+
 </div>
 
-<div class="box hidden" id="panel">
-<h2>پنل</h2>
-<p>ورود موفق</p>
-</div>
-
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script src="./admin.js"></script>
 
 </body>
