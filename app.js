@@ -12,26 +12,19 @@ const container = document.getElementById("menu-items");
 const searchBox = document.getElementById("searchBox");
 
 async function loadItems() {
-  try {
-    const { data, error } = await supabaseClient
-      .from("menu")
-      .select("*");
+  const { data, error } = await supabaseClient
+    .from("menu")
+    .select("*");
 
-    if (error) {
-      console.error("Supabase Error:", error);
-      container.innerHTML =
-        "<p style='text-align:center'>خطا در دریافت اطلاعات</p>";
-      return;
-    }
-
-    items = data || [];
-alert(items.length);
-    renderMenu();
-  } catch (err) {
-    console.error(err);
+  if (error) {
+    console.error(error);
     container.innerHTML =
-      "<p style='text-align:center'>خطا در اتصال</p>";
+      "<p style='text-align:center'>خطا در دریافت اطلاعات</p>";
+    return;
   }
+
+  items = data || [];
+  renderMenu();
 }
 
 function renderMenu(filter = "", category = "") {
@@ -41,15 +34,13 @@ function renderMenu(filter = "", category = "") {
 
   if (filter) {
     filtered = filtered.filter(item =>
-      (item.name || "")
-        .toLowerCase()
-        .includes(filter.toLowerCase())
+      item.name?.includes(filter)
     );
   }
 
   if (category) {
-    filtered = filtered.filter(
-      item => item.category === category
+    filtered = filtered.filter(item =>
+      item.category === category
     );
   }
 
@@ -60,17 +51,12 @@ function renderMenu(filter = "", category = "") {
   }
 
   filtered.forEach(item => {
-    const image =
-      item.image && item.image.trim() !== ""
-        ? item.image
-        : "https://picsum.photos/300/200";
-
     container.innerHTML += `
       <div class="food-card">
-        <img src="${image}" alt="${item.name}">
-        <h3>${item.name || ""}</h3>
-        <p>${item.price || 0} تومان</p>
-        <small>${item.category || ""}</small>
+        <img src="${item.image}">
+        <h3>${item.name}</h3>
+        <p>${item.price} تومان</p>
+        <small>${item.category}</small>
       </div>
     `;
   });
