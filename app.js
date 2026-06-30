@@ -1,7 +1,10 @@
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 let items = [];
 
@@ -10,12 +13,13 @@ const searchBox = document.getElementById("searchBox");
 
 // گرفتن دیتا از Supabase
 async function loadItems() {
-  let { data, error } = await supabase
+
+  const { data, error } = await supabase
     .from("menu")
     .select("*");
 
   if (error) {
-    console.log("Load Error:", error);
+    console.log("Supabase Error:", error);
     return;
   }
 
@@ -23,7 +27,9 @@ async function loadItems() {
   renderMenu();
 }
 
+// نمایش منو
 function renderMenu(filter = "", category = "") {
+
   container.innerHTML = "";
 
   let filtered = items;
@@ -48,7 +54,7 @@ function renderMenu(filter = "", category = "") {
   filtered.forEach(item => {
     container.innerHTML += `
       <div class="food-card">
-        <img src="${item.image}">
+        <img src="${item.image || 'https://via.placeholder.com/300x200'}">
         <h3>${item.name}</h3>
         <p>${item.price} تومان</p>
         <small>${item.category}</small>
@@ -69,5 +75,5 @@ document.querySelectorAll(".category").forEach(cat => {
   });
 });
 
-// لود اولیه
+// شروع
 loadItems();
