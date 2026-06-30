@@ -25,6 +25,7 @@ async function loadItems() {
     }
 
     items = data || [];
+alert(items.length);
     renderMenu();
   } catch (err) {
     console.error(err);
