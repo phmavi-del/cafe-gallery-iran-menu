@@ -1,59 +1,64 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>کافه گالری ایران</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کافه گالری ایران</title>
 
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header class="header">
+  <header class="header">
 
-<img id="cafeLogo"
-style="width:100px;height:100px;border-radius:50%;object-fit:cover;display:none;">
+    <img
+      id="cafeLogo"
+      style="width:100px;height:100px;border-radius:50%;object-fit:cover;display:none;"
+      alt="لوگوی کافه"
+    >
 
-<h1 id="cafeNameTitle">کافه گالری ایران</h1>
-<p>منوی دیجیتال</p>
+    <h1 id="cafeNameTitle">کافه گالری ایران</h1>
+    <p>منوی دیجیتال</p>
 
-</header>
+  </header>
 
-<section class="info">
-<a href="tel:09393512173" class="btn">تماس با کافه</a>
-<a href="https://instagram.com/iranfood_sari" class="btn">اینستاگرام</a>
-</section>
+  <section class="info">
+    <a href="tel:09393512173" class="btn">
+      تماس با کافه
+    </a>
 
-<div style="padding:15px;">
-<input id="searchBox"
-placeholder="جستجوی غذا..."
-style="width:100%;padding:10px;border-radius:10px;border:none;">
-</div>
+    <a href="https://instagram.com/iranfood_sari" class="btn" target="_blank">
+      اینستاگرام
+    </a>
+  </section>
 
-<section id="categories">
+  <div style="padding:15px;">
+    <input
+      id="searchBox"
+      placeholder="جستجوی غذا..."
+      style="width:100%;padding:10px;border-radius:10px;border:none;"
+    >
+  </div>
 
-<div class="category">پیتزا</div>
-<div class="category">برگر</div>
-<div class="category">ساندویچ</div>
-<div class="category">سالاد</div>
-<div class="category">پاستا</div>
-<div class="category">پیش غذا</div>
-<div class="category">دسر</div>
-<div class="category">بار گرم و سرد</div>
+  <section id="categories">
+    <div class="category">پیتزا</div>
+    <div class="category">برگر</div>
+    <div class="category">ساندویچ</div>
+    <div class="category">سالاد</div>
+    <div class="category">پاستا</div>
+    <div class="category">پیش غذا</div>
+    <div class="category">دسر</div>
+    <div class="category">بار گرم و سرد</div>
+  </section>
 
-</section>
+  <section id="menu-items"></section>
 
-<section id="menu-items"></section>
+  <footer>
+    📍 مازندران - ساری - خیابان شهدا - کوچه اکبری
+  </footer>
 
-<footer>
-📍 مازندران - ساری - خیابان شهدا - کوچه اکبری
-</footer>
-
-<!-- SUPABASE (حتماً قبل app.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
