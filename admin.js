@@ -1,19 +1,52 @@
+const PASSWORD = "4321";
+
 const supabase = window.supabase.createClient(
   "https://fgqnzspfrkqdczsyoose.supabase.co",
   "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1"
 );
 
-let imageBase64 = "";
+let imgBase64 = "";
 
 // عناصر
+const loginBox = document.getElementById("loginBox");
+const panel = document.getElementById("panel");
+
+const pass = document.getElementById("pass");
+
 const name = document.getElementById("name");
 const price = document.getElementById("price");
 const cat = document.getElementById("cat");
-const addBtn = document.getElementById("addBtn");
+
 const list = document.getElementById("list");
 
+// 🔐 لاگین
+document.getElementById("loginBtn").addEventListener("click", () => {
+
+  if (pass.value !== PASSWORD) {
+    alert("رمز اشتباه است");
+    return;
+  }
+
+  loginBox.classList.add("hidden");
+  panel.classList.remove("hidden");
+
+  loadMenu();
+});
+
+// 📷 عکس
+document.getElementById("img").addEventListener("change", e => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    imgBase64 = reader.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
 // ➕ افزودن غذا
-addBtn.addEventListener("click", async () => {
+document.getElementById("addBtn").addEventListener("click", async () => {
 
   if (!name.value || !price.value) {
     alert("نام و قیمت لازم است");
@@ -24,22 +57,13 @@ addBtn.addEventListener("click", async () => {
     name: name.value,
     price: Number(price.value),
     category: cat.value,
-    image: imageBase64
+    image: imgBase64
   }]);
 
   name.value = "";
   price.value = "";
 
   loadMenu();
-});
-
-// 📷 عکس
-document.getElementById("img").addEventListener("change", e => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = () => imageBase64 = reader.result;
-  reader.readAsDataURL(file);
 });
 
 // 📦 لود منو
@@ -71,16 +95,14 @@ function render(items) {
   });
 }
 
-// 📱 QR منو
-function generateQR() {
+// 🧾 QR
+function makeQR() {
 
   const url = window.location.origin + "/menu.html";
 
   document.getElementById("qrBox").innerHTML = "";
 
-  QRCode.toCanvas(url, { width: 200 }, function (err, canvas) {
+  QRCode.toCanvas(url, { width: 200 }, (err, canvas) => {
     document.getElementById("qrBox").appendChild(canvas);
   });
 }
-
-loadMenu();

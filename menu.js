@@ -3,11 +3,9 @@ const supabase = window.supabase.createClient(
   "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1"
 );
 
-async function loadMenu() {
+async function load() {
 
-  const { data } = await supabase
-    .from("menu")
-    .select("*");
+  const { data } = await supabase.from("menu").select("*");
 
   const box = document.getElementById("menu");
   box.innerHTML = "";
@@ -24,4 +22,4 @@ async function loadMenu() {
   });
 }
 
-loadMenu();
+load();
