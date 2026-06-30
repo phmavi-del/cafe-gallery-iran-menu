@@ -1,22 +1,101 @@
-<!DOCTYPE html><html lang="fa" dir="rtl">
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>پنل مدیریت - کافه گالری ایران</title><link rel="stylesheet" href="style.css"><style>
+<title>پنل مدیریت کافه گالری ایران</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:tahoma;
+}
+
 body{
 background:#111;
 color:white;
 padding:20px;
-font-family:tahoma;
 }
 
-input,select,button{
+#loginBox{
+max-width:400px;
+margin:100px auto;
+background:#1c1c1c;
+padding:25px;
+border-radius:20px;
+border:1px solid #333;
+}
+
+#panel{
+display:none;
+}
+
+.topbar{
+text-align:center;
+margin-bottom:25px;
+}
+
+.topbar h1{
+color:#d4af37;
+font-size:34px;
+}
+
+.topbar p{
+color:#999;
+margin-top:5px;
+}
+
+.stats{
+display:flex;
+justify-content:center;
+margin-bottom:25px;
+}
+
+.stat-card{
+background:#1c1c1c;
+padding:20px;
+border-radius:20px;
+width:220px;
+text-align:center;
+border:1px solid #333;
+}
+
+.stat-card h2{
+font-size:42px;
+color:#d4af37;
+}
+
+.section{
+background:#1b1b1b;
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+border:1px solid #333;
+}
+
+.section h3{
+color:#d4af37;
+margin-bottom:15px;
+}
+
+input,
+select,
+button{
 width:100%;
-padding:10px;
+padding:12px;
 margin:8px 0;
-border-radius:10px;
+border-radius:12px;
 border:none;
-box-sizing:border-box;
+}
+
+input,
+select{
+background:#2a2a2a;
+color:white;
 }
 
 button{
@@ -24,33 +103,116 @@ background:#d4af37;
 color:black;
 font-weight:bold;
 cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-2px);
 }
 
 .card{
-background:#222;
-padding:10px;
-margin:10px 0;
-border-radius:10px;
-}
-
-hr{
-margin:20px 0;
+background:#252525;
+padding:15px;
+border-radius:15px;
+margin-bottom:10px;
 border:1px solid #333;
 }
 
-h2,h3{
-text-align:center;
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:10px;
 }
-</style></head>
-<body><h2>🔐 ورود به پنل مدیریت</h2><div id="loginBox">
-<input type="password" id="password" placeholder="رمز عبور">
-<button onclick="login()">ورود</button>
-</div><div id="panel" style="display:none"><h2>کافه گالری ایران</h2><hr><h3>⚙️ تنظیمات کافه</h3><input id="cafeName" placeholder="نام کافه"><input id="cafePhone" placeholder="شماره تماس"><input id="cafeInstagram" placeholder="اینستاگرام"><input id="cafeAddress" placeholder="آدرس"><label>لوگوی کافه</label>
-<input type="file" id="logoFile" accept="image/*">
+
+.card h4{
+color:#d4af37;
+margin-bottom:8px;
+}
+
+.delete-btn{
+background:#d9534f;
+color:white;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="loginBox">
+
+<h2 style="text-align:center;margin-bottom:20px;">
+🔐 ورود به پنل مدیریت
+</h2>
+
+<input
+type="password"
+id="password"
+placeholder="رمز عبور">
+
+<button onclick="login()">
+ورود
+</button>
+
+</div>
+
+<div id="panel">
+
+<div class="topbar">
+<h1>☕ کافه گالری ایران</h1>
+<p>مدیریت منوی دیجیتال</p>
+</div>
+
+<div class="stats">
+<div class="stat-card">
+<h2 id="foodCount">0</h2>
+<div>تعداد آیتم‌های منو</div>
+</div>
+</div>
+
+<div class="section">
+
+<h3>⚙️ تنظیمات کافه</h3>
+
+<input id="cafeName" placeholder="نام کافه">
+
+<input id="cafePhone" placeholder="شماره تماس">
+
+<input id="cafeInstagram" placeholder="اینستاگرام">
+
+<input id="cafeAddress" placeholder="آدرس">
+
+<label>لوگوی کافه</label>
+
+<input
+type="file"
+id="logoFile"
+accept="image/*">
 
 <button onclick="saveSettings()">
-ذخیره تنظیمات
-</button><hr><h3>🍔 افزودن غذا</h3><input id="name" placeholder="نام غذا"><input id="price" placeholder="قیمت"><input type="file" id="image" accept="image/*"><select id="category">
+💾 ذخیره تنظیمات
+</button>
+
+</div>
+
+<div class="section">
+
+<h3>🍔 افزودن غذا</h3>
+
+<input id="name" placeholder="نام غذا">
+
+<input id="price" placeholder="قیمت">
+
+<input
+type="file"
+id="image"
+accept="image/*">
+
+<select id="category">
+
 <option>پیتزا</option>
 <option>برگر</option>
 <option>ساندویچ</option>
@@ -59,9 +221,27 @@ text-align:center;
 <option>پیش غذا</option>
 <option>دسر</option>
 <option>بار گرم و سرد</option>
-</select><button onclick="addItem()">
+
+</select>
+
+<button onclick="addItem()">
 ➕ افزودن غذا
-</button><hr><h3>📋 لیست غذاها</h3><div id="list"></div></div><script src="admin.js"></script>
+</button>
+
+</div>
+
+<div class="section">
+
+<h3>📋 لیست غذاها</h3>
+
+<div id="list"></div>
+
+</div>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js"></script>
+
 </body>
 </html>
