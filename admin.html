@@ -2,51 +2,147 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>پنل مدیریت</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>پنل مدیریت کافه گالری ایران</title>
 
 <style>
-body{background:#111;color:#fff;font-family:tahoma;padding:20px}
-.box{max-width:400px;margin:80px auto;background:#1c1c1c;padding:20px;border-radius:15px}
-input,button{width:100%;padding:10px;margin:8px 0;border-radius:10px;border:none}
-input{background:#2a2a2a;color:#fff}
-button{background:#d4af37;font-weight:bold;cursor:pointer}
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+background:#111;
+color:#fff;
+font-family:tahoma;
+padding:20px;
+}
+
+.login-box,.panel{
+max-width:1000px;
+margin:auto;
+background:#1a1a1a;
+padding:20px;
+border-radius:20px;
+box-shadow:0 0 20px rgba(212,175,55,.15);
+}
+
 .hidden{display:none}
-.card{background:#222;padding:10px;margin:10px 0;border-radius:10px}
-img{width:100%;border-radius:10px}
+
+h1,h2{
+color:#d4af37;
+margin-bottom:15px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+border-radius:10px;
+background:#2b2b2b;
+color:white;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:10px;
+background:#d4af37;
+color:#000;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.form{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:20px;
+}
+
+.form button{
+grid-column:span 2;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+gap:15px;
+}
+
+.card{
+background:#222;
+padding:10px;
+border-radius:15px;
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.price{
+color:#d4af37;
+font-weight:bold;
+margin:10px 0;
+}
+
+.actions{
+display:flex;
+gap:5px;
+}
+
+.delete{
+background:#c62828;
+color:#fff;
+}
+
+.qr{
+margin-top:20px;
+text-align:center;
+}
 </style>
 </head>
 
 <body>
 
-<div class="box" id="loginBox">
-<h2>🔐 ورود</h2>
-<input type="password" id="pass" placeholder="رمز">
+<div class="login-box" id="loginBox">
+<h1>🔐 پنل مدیریت</h1>
+<input type="password" id="pass" placeholder="رمز ورود">
 <button onclick="login()">ورود</button>
 </div>
 
-<div class="box hidden" id="panel">
+<div class="panel hidden" id="panel">
 
-<h2>🍔 منو</h2>
+<h1>☕ کافه گالری ایران</h1>
 
+<div class="form">
 <input id="name" placeholder="نام غذا">
 <input id="price" placeholder="قیمت">
+
 <input type="file" id="img">
 
-<button onclick="addFood()">➕ افزودن</button>
+<button onclick="addFood()">➕ افزودن غذا</button>
+</div>
 
-<hr>
+<button onclick="makeQR()">ساخت QR منو</button>
 
-<button onclick="makeQR()">ساخت QR</button>
+<div class="qr">
 <div id="qrBox"></div>
+</div>
 
-<hr>
+<hr style="margin:20px 0">
 
-<div id="list"></div>
+<div class="cards" id="list"></div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-<script src="./admin.js"></script>
+<script src="admin.js"></script>
 
 </body>
 </html>

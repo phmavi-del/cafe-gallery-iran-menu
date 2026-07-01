@@ -1,62 +1,92 @@
 const PASSWORD = "1234";
 
-let foods = [];
+let foods = JSON.parse(localStorage.getItem("foods")) || [];
 let imgBase64 = "";
 
-// 🔐 لاگین
-function login() {
+function saveFoods(){
+  localStorage.setItem("foods", JSON.stringify(foods));
+}
+
+function login(){
 
   const pass = document.getElementById("pass").value;
 
-  if (pass !== PASSWORD) {
+  if(pass !== PASSWORD){
     alert("رمز اشتباه است");
     return;
   }
 
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("panel").style.display = "block";
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("panel").classList.remove("hidden");
+
+  render();
 }
 
-// 📷 عکس
-document.getElementById("img").addEventListener("change", e => {
+const imgInput = document.getElementById("img");
 
-  const file = e.target.files[0];
-  const reader = new FileReader();
+if(imgInput){
 
-  reader.onload = () => {
-    imgBase64 = reader.result;
-  };
+  imgInput.addEventListener("change", e => {
 
-  reader.readAsDataURL(file);
-});
+    const file = e.target.files[0];
 
-// ➕ افزودن غذا
-function addFood() {
+    if(!file) return;
 
-  const name = document.getElementById("name").value;
-  const price = document.getElementById("price").value;
+    const reader = new FileReader();
 
-  if (!name || !price) {
-    alert("نام و قیمت لازم است");
+    reader.onload = () => {
+      imgBase64 = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+function addFood(){
+
+  const name = document.getElementById("name").value.trim();
+  const price = document.getElementById("price").value.trim();
+
+  if(!name || !price){
+    alert("نام و قیمت را وارد کنید");
     return;
   }
 
   foods.push({
+    id: Date.now(),
     name,
     price,
     image: imgBase64
   });
 
+  saveFoods();
   render();
 
   document.getElementById("name").value = "";
   document.getElementById("price").value = "";
+  document.getElementById("img").value = "";
+
+  imgBase64 = "";
 }
 
-// 🎨 نمایش
-function render() {
+function deleteFood(id){
+
+  if(!confirm("حذف شود؟")) return;
+
+  foods = foods.filter(f => f.id !== id);
+
+  saveFoods();
+  render();
+}
+
+function render(){
 
   const list = document.getElementById("list");
+
+  if(!list) return;
+
   list.innerHTML = "";
 
   foods.forEach(f => {
@@ -65,20 +95,36 @@ function render() {
       <div class="card">
         ${f.image ? `<img src="${f.image}">` : ""}
         <h3>${f.name}</h3>
-        <p>${f.price} تومان</p>
+        <div class="price">${f.price} تومان</div>
+
+        <div class="actions">
+          <button class="delete" onclick="deleteFood(${f.id})">
+            حذف
+          </button>
+        </div>
       </div>
     `;
   });
+
 }
 
-// 📱 QR
-function makeQR() {
+function makeQR(){
 
-  const url = window.location.origin + "/menu.html";
+  const url =
+  window.location.origin +
+  window.location.pathname.replace("admin.html","menu.html");
 
   document.getElementById("qrBox").innerHTML = "";
 
-  QRCode.toCanvas(url, { width: 200 }, (err, canvas) => {
+  QRCode.toCanvas(url,{width:220},function(err,canvas){
+
+    if(err){
+      console.log(err);
+      return;
+    }
+
     document.getElementById("qrBox").appendChild(canvas);
+
   });
+
 }
