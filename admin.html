@@ -1,246 +1,107 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>پنل مدیریت کافه گالری ایران</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:tahoma,sans-serif;
-}
-
 body{
-background:#111;
-color:#fff;
-padding:20px;
+  background:#111;
+  color:#fff;
+  font-family:tahoma;
+  padding:20px;
 }
 
-.hidden{
-display:none;
+.box{
+  max-width:900px;
+  margin:auto;
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:15px;
 }
 
-.login-box,
-.panel{
-max-width:1100px;
-margin:auto;
-background:#1a1a1a;
-padding:25px;
-border-radius:20px;
-box-shadow:0 0 25px rgba(212,175,55,.15);
-}
-
-h1{
-color:#d4af37;
-margin-bottom:20px;
-}
-
-input,
-select{
-
-width:100%;
-padding:12px;
-margin:8px 0;
-
-border:none;
-border-radius:10px;
-
-background:#2b2b2b;
-color:#fff;
+input,select{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
+  background:#2a2a2a;
+  color:#fff;
 }
 
 button{
-
-padding:12px;
-
-border:none;
-border-radius:10px;
-
-background:#d4af37;
-color:#111;
-
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-opacity:.9;
-}
-
-.form{
-
-display:grid;
-
-grid-template-columns:
-1fr 1fr;
-
-gap:10px;
-
-margin-bottom:20px;
-}
-
-.form button{
-grid-column:span 2;
-}
-
-.cards{
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fill,minmax(250px,1fr));
-
-gap:15px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#d4af37;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
 }
 
 .card{
-
-background:#222;
-
-padding:10px;
-
-border-radius:15px;
+  background:#222;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
 }
 
-.card img{
-
-width:100%;
-height:180px;
-
-object-fit:cover;
-
-border-radius:10px;
+img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:10px;
 }
 
-.price{
-
-color:#d4af37;
-font-weight:bold;
-
-margin-top:10px;
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
-
-.category{
-
-color:#bbb;
-margin-top:5px;
-}
-
-.actions{
-
-display:flex;
-gap:5px;
-
-margin-top:10px;
-}
-
-.delete{
-background:#c62828;
-color:white;
-}
-
-.edit{
-background:#1976d2;
-color:white;
-}
-
-.qr{
-margin-top:20px;
-text-align:center;
-}
-
-.qr canvas{
-margin-top:15px;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div class="login-box" id="loginBox">
-
-<h1>🔐 پنل مدیریت</h1>
-
-<input
-type="password"
-id="pass"
-placeholder="رمز ورود">
-
-<button onclick="login()">
-ورود
-</button>
-
+<div class="box" id="loginBox">
+<h2>ورود پنل</h2>
+<input type="password" id="pass" placeholder="رمز">
+<button onclick="login()">ورود</button>
 </div>
 
-<div class="panel hidden" id="panel">
+<div class="box" id="panel" style="display:none">
 
-<h1>☕ کافه گالری ایران</h1>
+<h2>مدیریت منو</h2>
 
-<div class="form">
-
-<input
-id="name"
-placeholder="نام غذا">
-
-<input
-id="price"
-placeholder="قیمت">
-
-<input
-id="image"
-placeholder="لینک عکس غذا">
+<input id="name" placeholder="نام غذا">
+<input id="price" placeholder="قیمت">
 
 <select id="category">
-
-<option value="">دسته بندی</option>
-
-<option>پیتزا</option>
-<option>برگر</option>
-<option>ساندویچ</option>
-<option>سالاد</option>
-<option>پاستا</option>
-<option>پیش غذا</option>
-<option>دسر</option>
-<option>بار گرم و سرد</option>
-
+  <option>پیتزا</option>
+  <option>برگر</option>
+  <option>ساندویچ</option>
+  <option>سالاد</option>
+  <option>پاستا</option>
+  <option>پیش غذا</option>
+  <option>دسر</option>
+  <option>بار گرم و سرد</option>
 </select>
 
-<button onclick="saveFood()">
-💾 ذخیره غذا
-</button>
+<input type="file" id="image">
+
+<button onclick="addFood()">➕ افزودن غذا</button>
+
+<hr>
+
+<div id="list"></div>
 
 </div>
-
-<button onclick="makeQR()">
-📱 ساخت QR منو
-</button>
-
-<div class="qr">
-<div id="qrBox"></div>
-</div>
-
-<hr style="margin:20px 0">
-
-<div class="cards" id="list"></div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-alert("admin html ok");
-</script>
-<script src="./admin.js"></script>
+<script src="admin.js"></script>
 
 </body>
 </html>

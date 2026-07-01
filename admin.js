@@ -1,7 +1,3 @@
-alert("admin js ok");
-alert("admin.js loaded");
-const PASSWORD = "1234";
-
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
 
@@ -10,291 +6,113 @@ const supabase = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-let editingId = null;
+const PASSWORD = "ghofl21733";
 
-function login() {
+let imageFile = null;
 
-  const pass =
-    document.getElementById("pass").value;
+document.getElementById("image").addEventListener("change", (e) => {
+  imageFile = e.target.files[0];
+});
 
-  if (pass !== PASSWORD) {
+function login(){
+  const pass = document.getElementById("pass").value;
 
-    alert("رمز ورود اشتباه است");
+  if(pass !== PASSWORD){
+    alert("رمز اشتباه است");
     return;
-
   }
 
-  document
-    .getElementById("loginBox")
-    .classList.add("hidden");
-
-  document
-    .getElementById("panel")
-    .classList.remove("hidden");
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("panel").style.display = "block";
 
   loadFoods();
-
 }
 
-async function loadFoods() {
+async function uploadImage(file){
+  if(!file) return null;
 
-  const { data, error } = await supabase
-    .from("menu")
-    .select("*")
-    .order("id", { ascending: false });
+  const fileName = Date.now() + "-" + file.name;
 
-  if (error) {
+  const { data, error } = await supabase.storage
+    .from("images")
+    .upload(fileName, file);
 
-    console.error(error);
-    alert("خطا در دریافت اطلاعات");
-
-    return;
+  if(error){
+    console.log(error);
+    return null;
   }
 
-  renderFoods(data || []);
+  const { data: urlData } = supabase.storage
+    .from("images")
+    .getPublicUrl(fileName);
 
+  return urlData.publicUrl;
 }
 
-function renderFoods(foods) {
+async function addFood(){
 
-  const list =
-    document.getElementById("list");
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+  const category = document.getElementById("category").value;
 
-  list.innerHTML = "";
-
-  foods.forEach(food => {
-
-    list.innerHTML += `
-
-      <div class="card">
-
-        ${
-          food.image
-          ?
-          `<img src="${food.image}">`
-          :
-          ""
-        }
-
-        <h3>${food.name}</h3>
-
-        <div class="price">
-          ${food.price} تومان
-        </div>
-
-        <div class="category">
-          ${food.category || ""}
-        </div>
-
-        <div class="actions">
-
-          <button
-            class="edit"
-            onclick="editFood(${food.id})">
-
-            ویرایش
-
-          </button>
-
-          <button
-            class="delete"
-            onclick="deleteFood(${food.id})">
-
-            حذف
-
-          </button>
-
-        </div>
-
-      </div>
-
-    `;
-  });
-
-}
-
-async function saveFood() {
-
-  const name =
-    document.getElementById("name")
-    .value
-    .trim();
-
-  const price =
-    document.getElementById("price")
-    .value
-    .trim();
-
-  const image =
-    document.getElementById("image")
-    .value
-    .trim();
-
-  const category =
-    document.getElementById("category")
-    .value;
-
-  if (
-    !name ||
-    !price ||
-    !category
-  ) {
-
-    alert("اطلاعات کامل نیست");
-    return;
-
-  }
-
-  if (editingId) {
-
-    const { error } = await supabase
-      .from("menu")
-      .update({
-        name,
-        price,
-        image,
-        category
-      })
-      .eq("id", editingId);
-
-    if (error) {
-
-      console.error(error);
-
-      alert("خطا در ویرایش");
-      return;
-    }
-
-    editingId = null;
-
-  } else {
-
-    const { error } = await supabase
-      .from("menu")
-      .insert([
-        {
-          name,
-          price,
-          image,
-          category
-        }
-      ]);
-
-    if (error) {
-
-      console.error(error);
-
-      alert("خطا در ثبت غذا");
-      return;
-    }
-
-  }
-
-  clearForm();
-
-  loadFoods();
-
-}
-
-async function editFood(id) {
-
-  const { data, error } = await supabase
-    .from("menu")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) {
-
-    console.error(error);
-    return;
-
-  }
-
-  document.getElementById("name").value =
-    data.name;
-
-  document.getElementById("price").value =
-    data.price;
-
-  document.getElementById("image").value =
-    data.image || "";
-
-  document.getElementById("category").value =
-    data.category || "";
-
-  editingId = data.id;
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-}
-
-async function deleteFood(id) {
-
-  if (
-    !confirm("غذا حذف شود؟")
-  ) return;
+  const imageUrl = await uploadImage(imageFile);
 
   const { error } = await supabase
+    .from("menu")
+    .insert([{
+      name,
+      price,
+      category,
+      image: imageUrl
+    }]);
+
+  if(error){
+    alert("خطا در ثبت غذا");
+    console.log(error);
+    return;
+  }
+
+  alert("اضافه شد");
+
+  document.getElementById("name").value = "";
+  document.getElementById("price").value = "";
+
+  imageFile = null;
+
+  loadFoods();
+}
+
+async function loadFoods(){
+
+  const { data } = await supabase
+    .from("menu")
+    .select("*")
+    .order("id", { ascending:false });
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(item => {
+
+    list.innerHTML += `
+      <div class="card">
+        <img src="${item.image}">
+        <h3>${item.name}</h3>
+        <p>${item.price} تومان</p>
+        <small>${item.category}</small>
+
+        <button onclick="deleteFood(${item.id})">حذف</button>
+      </div>
+    `;
+  });
+}
+
+async function deleteFood(id){
+
+  await supabase
     .from("menu")
     .delete()
     .eq("id", id);
 
-  if (error) {
-
-    console.error(error);
-
-    alert("خطا در حذف");
-    return;
-
-  }
-
   loadFoods();
-
-}
-
-function clearForm() {
-
-  document.getElementById("name").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("image").value = "";
-
-  document.getElementById("category").value = "";
-
-}
-
-function makeQR() {
-
-  const url =
-    window.location.origin +
-    "/";
-
-  document
-    .getElementById("qrBox")
-    .innerHTML = "";
-
-  QRCode.toCanvas(
-    url,
-    {
-      width: 250
-    },
-    function(err, canvas) {
-
-      if (err) {
-
-        console.error(err);
-        return;
-
-      }
-
-      document
-        .getElementById("qrBox")
-        .appendChild(canvas);
-
-    }
-  );
-
 }
