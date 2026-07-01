@@ -1,64 +1,84 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>کافه گالری ایران</title>
 
-  <link rel="stylesheet" href="style.css">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>کافه گالری ایران</title>
+
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <header class="header">
+<header class="header">
 
-    <img
-      id="cafeLogo"
-      style="width:100px;height:100px;border-radius:50%;object-fit:cover;display:none;"
-      alt="لوگوی کافه"
-    >
+<img
+id="cafeLogo"
+src=""
+alt="لوگوی کافه"
+style="display:none;width:100px;height:100px;border-radius:50%;object-fit:cover;"
+>
 
-    <h1 id="cafeNameTitle">کافه گالری ایران</h1>
-    <p>منوی دیجیتال</p>
+<h1 id="cafeNameTitle">کافه گالری ایران</h1>
 
-  </header>
+<p>منوی دیجیتال کافه</p>
 
-  <section class="info">
-    <a href="tel:09393512173" class="btn">
-      تماس با کافه
-    </a>
+</header>
 
-    <a href="https://instagram.com/iranfood_sari" class="btn" target="_blank">
-      اینستاگرام
-    </a>
-  </section>
+<section class="info">
 
-  <div style="padding:15px;">
-    <input
-      id="searchBox"
-      placeholder="جستجوی غذا..."
-      style="width:100%;padding:10px;border-radius:10px;border:none;"
-    >
-  </div>
+<a href="tel:09393512173" class="btn">
+📞 تماس با کافه
+</a>
 
-  <section id="categories">
-    <div class="category">پیتزا</div>
-    <div class="category">برگر</div>
-    <div class="category">ساندویچ</div>
-    <div class="category">سالاد</div>
-    <div class="category">پاستا</div>
-    <div class="category">پیش غذا</div>
-    <div class="category">دسر</div>
-    <div class="category">بار گرم و سرد</div>
-  </section>
+<a
+href="https://instagram.com/iranfood_sari"
+class="btn"
+target="_blank"
+>
+📷 اینستاگرام
+</a>
 
-  <section id="menu-items"></section>
+</section>
 
-  <footer>
-    📍 مازندران - ساری - خیابان شهدا - کوچه اکبری
-  </footer>
+<div class="search-wrapper">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js"></script>
+<input
+type="text"
+id="searchBox"
+placeholder="جستجوی غذا..."
+>
+
+</div>
+
+<section id="categories">
+
+<div class="category">همه</div>
+
+<div class="category">پیتزا</div>
+<div class="category">برگر</div>
+<div class="category">ساندویچ</div>
+<div class="category">سالاد</div>
+<div class="category">پاستا</div>
+<div class="category">پیش غذا</div>
+<div class="category">دسر</div>
+<div class="category">بار گرم و سرد</div>
+
+</section>
+
+<section id="menu-items"></section>
+
+<footer>
+
+📍 مازندران - ساری - خیابان شهدا - کوچه اکبری
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="app.js"></script>
 
 </body>
 </html>

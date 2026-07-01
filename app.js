@@ -1,77 +1,136 @@
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
 
-const supabaseClient = window.supabase.createClient(
+const supabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
-let items = [];
-
 const container = document.getElementById("menu-items");
 const searchBox = document.getElementById("searchBox");
 
-async function loadItems() {
-  const { data, error } = await supabaseClient
-    .from("menu")
-    .select("*");
+let foods = [];
+let currentCategory = "همه";
 
-  if (error) {
-    console.error(error);
+async function loadFoods() {
+
+  container.innerHTML =
+    '<div class="loading">در حال دریافت منو...</div>';
+
+  try {
+
+    const { data, error } = await supabase
+      .from("menu")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) throw error;
+
+    foods = data || [];
+
+    renderFoods();
+
+  } catch (err) {
+
+    console.error(err);
+
     container.innerHTML =
-      "<p style='text-align:center'>خطا در دریافت اطلاعات</p>";
-    return;
+      '<div class="empty">خطا در دریافت اطلاعات منو</div>';
+
   }
 
-  items = data || [];
-  renderMenu();
 }
 
-function renderMenu(filter = "", category = "") {
-  container.innerHTML = "";
+function renderFoods() {
 
-  let filtered = [...items];
+  const searchText =
+    searchBox.value.trim().toLowerCase();
 
-  if (filter) {
+  let filtered = foods;
+
+  if (currentCategory !== "همه") {
+
     filtered = filtered.filter(item =>
-      item.name?.includes(filter)
+      item.category === currentCategory
     );
+
   }
 
-  if (category) {
+  if (searchText) {
+
     filtered = filtered.filter(item =>
-      item.category === category
+      item.name &&
+      item.name.toLowerCase().includes(searchText)
     );
+
   }
 
   if (filtered.length === 0) {
+
     container.innerHTML =
-      "<p style='text-align:center'>موردی پیدا نشد</p>";
+      '<div class="empty">موردی پیدا نشد</div>';
+
     return;
+
   }
 
+  container.innerHTML = "";
+
   filtered.forEach(item => {
+
+    const image =
+      item.image && item.image.trim() !== ""
+      ? item.image
+      : "https://via.placeholder.com/500x300?text=Cafe+Gallery+Iran";
+
     container.innerHTML += `
       <div class="food-card">
-        <img src="${item.image}">
+
+        <img
+          src="${image}"
+          alt="${item.name}"
+          loading="lazy"
+        >
+
         <h3>${item.name}</h3>
+
         <p>${item.price} تومان</p>
-        <small>${item.category}</small>
+
+        <small>${item.category || ""}</small>
+
       </div>
     `;
+
   });
+
 }
 
 if (searchBox) {
-  searchBox.addEventListener("input", e => {
-    renderMenu(e.target.value);
+
+  searchBox.addEventListener("input", () => {
+    renderFoods();
   });
+
 }
 
-document.querySelectorAll(".category").forEach(cat => {
-  cat.addEventListener("click", () => {
-    renderMenu("", cat.innerText);
+document.querySelectorAll(".category").forEach(btn => {
+
+  btn.addEventListener("click", () => {
+
+    document
+      .querySelectorAll(".category")
+      .forEach(c =>
+        c.classList.remove("active-category")
+      );
+
+    btn.classList.add("active-category");
+
+    currentCategory = btn.innerText.trim();
+
+    renderFoods();
+
   });
+
 });
 
-loadItems();
+loadFoods();
