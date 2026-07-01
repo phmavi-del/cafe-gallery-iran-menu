@@ -1,4 +1,4 @@
-
+alert("admin js ok");
 alert("admin.js loaded");
 const PASSWORD = "1234";
 
