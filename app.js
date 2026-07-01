@@ -1,143 +1,138 @@
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MMAjs6wYFJOIspkwZ7Yzsg_uXA21Gc1";
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
-const container = document.getElementById("menu-items");
-const searchBox = document.getElementById("searchBox");
+let items = [];
 
-let foods = [];
-let currentCategory = "همه";
+const container =
+document.getElementById("menu-items");
 
-async function loadFoods() {
+const searchBox =
+document.getElementById("searchBox");
 
-  container.innerHTML =
-    '<div class="loading">در حال دریافت منو...</div>';
+async function loadItems() {
 
-  try {
+const { data, error } =
+await supabaseClient
+.from("menu")
+.select("*");
 
-    const { data, error } = await supabase
-      .from("menu")
-      .select("*")
+if(error){
 
-console.log("DATA:", data);
-console.log("ERROR:", error);
+console.log(error);
 
+container.innerHTML =
+"<p style='text-align:center'>خطا در دریافت اطلاعات</p>";
 
-      .order("id", { ascending: false });
+return;
+}
 
-    if (error) throw error;
+items = data || [];
 
-    foods = data || [];
-
-    renderFoods();
-
-  } catch (err) {
-
-    console.error(err);
-
-    container.innerHTML =
-      '<div class="empty">خطا در دریافت اطلاعات منو</div>';
-
-  }
+renderMenu();
 
 }
 
-function renderFoods() {
+function renderMenu(
+filter = "",
+category = ""
+){
 
-  const searchText =
-    searchBox.value.trim().toLowerCase();
+container.innerHTML = "";
 
-  let filtered = foods;
+let filtered = [...items];
 
-  if (currentCategory !== "همه") {
+if(filter){
 
-    filtered = filtered.filter(item =>
-      item.category === currentCategory
-    );
-
-  }
-
-  if (searchText) {
-
-    filtered = filtered.filter(item =>
-      item.name &&
-      item.name.toLowerCase().includes(searchText)
-    );
-
-  }
-
-  if (filtered.length === 0) {
-
-    container.innerHTML =
-      '<div class="empty">موردی پیدا نشد</div>';
-
-    return;
-
-  }
-
-console.log(item);
-
-  container.innerHTML = "";
-
-  filtered.forEach(item => {
-
-    const image =
-      item.image && item.image.trim() !== ""
-      ? item.image
-      : "https://via.placeholder.com/500x300?text=Cafe+Gallery+Iran";
-
-    container.innerHTML += `
-      <div class="food-card">
-
-        <img
-          src="${image}"
-          alt="${item.name}"
-          loading="lazy"
-        >
-
-        <h3>${item.name}</h3>
-
-        <p>${item.price} تومان</p>
-
-        <small>${item.category || ""}</small>
-
-      </div>
-    `;
-
-  });
+filtered = filtered.filter(item =>
+(item.name || "")
+.includes(filter)
+);
 
 }
 
-if (searchBox) {
+if(category && category !== "همه"){
 
-  searchBox.addEventListener("input", () => {
-    renderFoods();
-  });
+filtered = filtered.filter(item =>
+(item.category || "")
+=== category
+);
 
 }
 
-document.querySelectorAll(".category").forEach(btn => {
+if(filtered.length === 0){
 
-  btn.addEventListener("click", () => {
+container.innerHTML =
+"<p style='text-align:center'>موردی پیدا نشد</p>";
 
-    document
-      .querySelectorAll(".category")
-      .forEach(c =>
-        c.classList.remove("active-category")
-      );
+return;
+}
 
-    btn.classList.add("active-category");
+filtered.forEach(item => {
 
-    currentCategory = btn.innerText.trim();
+container.innerHTML += `
+<div class="food-card">
 
-    renderFoods();
+<img
+src="${item.image || 'https://picsum.photos/400/300'}"
+alt="${item.name}"
+>
 
-  });
+<h3>${item.name || ""}</h3>
+
+<p>${item.price || ""} تومان</p>
+
+<small>${item.category || ""}</small>
+
+</div>
+`;
 
 });
 
-loadFoods();
+}
+
+if(searchBox){
+
+searchBox.addEventListener(
+"input",
+e => {
+
+renderMenu(
+e.target.value,
+currentCategory
+);
+
+}
+);
+
+}
+
+let currentCategory = "";
+
+document
+.querySelectorAll(".category")
+.forEach(cat => {
+
+cat.addEventListener(
+"click",
+() => {
+
+currentCategory =
+cat.innerText.trim();
+
+renderMenu(
+searchBox.value,
+currentCategory
+);
+
+}
+);
+
+});
+
+loadItems();
