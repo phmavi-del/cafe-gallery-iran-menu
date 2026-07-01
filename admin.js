@@ -1,3 +1,5 @@
+
+alert("admin.js loaded");
 const PASSWORD = "1234";
 
 const SUPABASE_URL = "https://fgqnzspfrkqdczsyoose.supabase.co";
