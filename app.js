@@ -22,6 +22,11 @@ async function loadFoods() {
     const { data, error } = await supabase
       .from("menu")
       .select("*")
+
+console.log("DATA:", data);
+console.log("ERROR:", error);
+
+
       .order("id", { ascending: false });
 
     if (error) throw error;
@@ -73,6 +78,8 @@ function renderFoods() {
     return;
 
   }
+
+console.log(item);
 
   container.innerHTML = "";
 
